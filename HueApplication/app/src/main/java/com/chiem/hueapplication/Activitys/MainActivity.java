@@ -1,4 +1,4 @@
-package com.chiem.hueapplication;
+package com.chiem.hueapplication.Activitys;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -10,7 +10,9 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.chiem.hueapplication.Adapters.ConnectionAdapter;
+import com.chiem.hueapplication.DatabaseHandler;
 import com.chiem.hueapplication.Models.Connection;
+import com.chiem.hueapplication.R;
 
 import java.util.ArrayList;
 
@@ -24,7 +26,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ArrayList<Connection> connections = DatabaseHandler.getInstance().GetPrevConnections();
+        DatabaseHandler databaseHandler = new DatabaseHandler(this);
+        //databaseHandler.AddConnection(new Connection("Test", "192.168.2.143", "1234", true, "newdeveloper"));
+        ArrayList<Connection> connections = databaseHandler.GetPrevConnections();
 
         recyclerView = findViewById(R.id.recycleView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -35,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
             TextView lblNoConnections = findViewById(R.id.lblNoPreviousConnections);
             lblNoConnections.setVisibility(View.INVISIBLE);
         }
+
+
 
         //For emulator
         //http://<ip>:<port>/api/newdeveloper

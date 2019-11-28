@@ -7,17 +7,15 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.chiem.hueapplication.ConnectionReminder;
+import com.chiem.hueapplication.Helpers.ConnectionReminder;
 import com.chiem.hueapplication.Models.Connection;
 import com.chiem.hueapplication.Models.Light;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -140,6 +138,42 @@ public class ApiManager {
         String url = baseUrl + "/lights/" + lightSendKey + "/state/";
 
         String json = "{\"bri\":" +  briValue +"}";
+        JsonObject jsonObjectToParse = JsonParser.parseString(json).getAsJsonObject();
+        JSONObject jsonToUse = new JSONObject();
+        try {
+            jsonToUse = new JSONObject(jsonObjectToParse.toString());
+        }
+        catch (Exception ex) {
+
+        }
+
+        final JsonObjectRequest request = new JsonObjectRequest(
+
+                Request.Method.PUT,
+                url,
+                jsonToUse,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                    }
+                },
+
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("VOLLEY_TAG", error.toString());
+                    }
+                }
+        );
+
+        queue.add(request);
+    }
+
+    public void changeHue(String lightSendKey, float hue, float sateration) {
+        String url = baseUrl + "/lights/" + lightSendKey + "/state/";
+
+        String json = "{\"hue\":" +  hue +", \"sat\":" + sateration + "}";
         JsonObject jsonObjectToParse = JsonParser.parseString(json).getAsJsonObject();
         JSONObject jsonToUse = new JSONObject();
         try {

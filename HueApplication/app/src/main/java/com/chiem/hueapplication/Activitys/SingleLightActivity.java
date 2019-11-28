@@ -1,17 +1,22 @@
-package com.chiem.hueapplication;
+package com.chiem.hueapplication.Activitys;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import com.chiem.hueapplication.Models.Light;
 import com.chiem.hueapplication.Network.ApiManager;
+import com.chiem.hueapplication.R;
+import com.flask.colorpicker.ColorPickerView;
+import com.flask.colorpicker.OnColorChangedListener;
 
 import java.util.ArrayList;
 
@@ -23,6 +28,8 @@ public class SingleLightActivity extends AppCompatActivity {
 
     private ArrayList<Integer> averageBrightnessList;
     private CountDownTimer countDownTimer;
+
+    private ColorPickerView colorPickerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +44,15 @@ public class SingleLightActivity extends AppCompatActivity {
         Switch lightSwitch = findViewById(R.id.switchOnOff)  ;
         SeekBar brightNessBar = findViewById(R.id.brightnessBar);
         brightNessBar.setMax(254);
+
+        colorPickerView = findViewById(R.id.color_picker_view);
+        colorPickerView.addOnColorChangedListener(new OnColorChangedListener() {
+            @Override
+            public void onColorChanged(int selectedColor) {
+                changeColor();
+            }
+        });
+
         final TextView txtBrigntnessValue = findViewById(R.id.txtBrightnessValue);
 
         brightNessBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -52,7 +68,7 @@ public class SingleLightActivity extends AppCompatActivity {
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
                 averageBrightnessList = new ArrayList<>();
-                countDownTimer = new CountDownTimer(100000, 100) {
+                countDownTimer = new CountDownTimer(100000, 200) {
                     @Override
                     public void onTick(long millisUntilFinished) {
                         changeBrightness(averageBrightnessList);
@@ -71,6 +87,7 @@ public class SingleLightActivity extends AppCompatActivity {
             }
         });
 
+
         lightSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 turnLightOnOff(isChecked);
@@ -84,6 +101,23 @@ public class SingleLightActivity extends AppCompatActivity {
         if(light.getLightState().isOn()) {
             lightSwitch.setChecked(true);
         }
+    }
+
+    private void changeColor() {
+
+        String hex = Integer.toHexString(colorPickerView.getSelectedColor());
+        int color = Color.parseColor("#" + hex);
+        int r = Color.red(color);
+        int g = Color.green(color);
+        int b = Color.blue(color);
+
+        float[] hsv = new float[3];
+        Color.RGBToHSV(r,g,b, hsv);
+
+        float correctHueValue = hsv[0] * (65535.0f / 360.0f);
+
+        apiManager.changeHue(light.getSendKey(), correctHueValue, 255 * hsv[1]);
+        //imageColor.setColorFilter(Color.rgb(r,g,b);
     }
 
     private void changeBrightness(int value) {

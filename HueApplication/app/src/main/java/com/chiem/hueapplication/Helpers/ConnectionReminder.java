@@ -1,4 +1,4 @@
-package com.chiem.hueapplication;
+package com.chiem.hueapplication.Helpers;
 
 import com.chiem.hueapplication.Models.Connection;
 

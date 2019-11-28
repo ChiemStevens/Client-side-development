@@ -11,10 +11,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SingleLightActivity"></activity>
-        <activity android:name=".ConnectedActivity" />
-        <activity android:name=".ConnectActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".Activitys.SingleLightActivity"></activity>
+        <activity android:name=".Activitys.ConnectedActivity" />
+        <activity android:name=".Activitys.ConnectActivity" />
+        <activity android:name=".Activitys.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

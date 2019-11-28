@@ -9,11 +9,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.chiem.hueapplication.ConnectedActivity;
-import com.chiem.hueapplication.Models.Connection;
 import com.chiem.hueapplication.Models.Light;
 import com.chiem.hueapplication.R;
-import com.chiem.hueapplication.SingleLightActivity;
+import com.chiem.hueapplication.Activitys.SingleLightActivity;
 
 import java.util.ArrayList;
 
