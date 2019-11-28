@@ -45,4 +45,9 @@ public class ConnectedActivity extends AppCompatActivity implements IApiObserver
         lights.add(light);
         adapter.notifyDataSetChanged();
     }
+
+    @Override
+    public void addLink(String key) {
+        //DO NOT IMPLEMENT HERE
+    }
 }

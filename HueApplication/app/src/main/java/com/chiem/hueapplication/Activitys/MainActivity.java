@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         DatabaseHandler databaseHandler = new DatabaseHandler(this);
-        //databaseHandler.AddConnection(new Connection("Test", "192.168.2.143", "1234", true, "newdeveloper"));
         ArrayList<Connection> connections = databaseHandler.GetPrevConnections();
 
         recyclerView = findViewById(R.id.recycleView);
@@ -39,8 +38,6 @@ public class MainActivity extends AppCompatActivity {
             TextView lblNoConnections = findViewById(R.id.lblNoPreviousConnections);
             lblNoConnections.setVisibility(View.INVISIBLE);
         }
-
-
 
         //For emulator
         //http://<ip>:<port>/api/newdeveloper

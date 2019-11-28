@@ -2,10 +2,12 @@ package com.chiem.hueapplication.Activitys;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
+import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -146,5 +148,13 @@ public class SingleLightActivity extends AppCompatActivity {
 
         this.light.getLightState().setOn(state);
         apiManager.changeLight(light);
+    }
+
+    public void OnAddPresetClick(View v) {
+
+        Intent intent = new Intent(this, SetPresetActivity.class);
+        intent.putExtra("LIGHT", light);
+        startActivity(intent);
+
     }
 }

@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.chiem.hueapplication.Models.Connection;
+import com.chiem.hueapplication.Models.Light;
 
 import java.util.ArrayList;
 
@@ -13,17 +14,23 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     private ArrayList<Connection> connections = new ArrayList<>();
     private static final String dbName = "HueDatabase";
-    private static final int dbVersion = 1;
-    private static final String dbTableName = "Connections";
-    private static final String CREATE_TABLE_Q = "CREATE TABLE " + dbTableName + "(Name text, Ip text, Port text, IsEmulator Integer, DBKey text)";
+    private static final int dbVersion = 4;
+
+    private static final String dbTableConnections = "Connections";
+    private static final String dbTablePresets  = "Presets";
+
+    private static final String CREATE_TABLE_C = "CREATE TABLE " + dbTableConnections + "(Name text, Ip text, Port text, IsEmulator Integer, DBKey text)";
+    private static final String CREATE_TABLE_P = "CREATE TABLE " + dbTablePresets + "(Name text, Brightness Integer, Hue Integer, Sat Integer)";
 
     public DatabaseHandler(Context context) {
+
         super(context, dbName, null, dbVersion);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(CREATE_TABLE_Q);
+        db.execSQL(CREATE_TABLE_C);
+        db.execSQL(CREATE_TABLE_P);
     }
 
     @Override
@@ -38,7 +45,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             emulator = 1;
         }
 
-        String insertStatement = "INSERT INTO " + dbTableName + " (Name, Ip, Port, IsEmulator, DBKey) " +
+        String insertStatement = "INSERT INTO " + dbTableConnections + " (Name, Ip, Port, IsEmulator, DBKey) " +
                 "VALUES ('" + connection.getName() + "', '" + connection.getIp() + "', " +
                 "'" + connection.getPort() + "', '" + emulator + "', '" + connection.getKey() + "')";
 
@@ -48,7 +55,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public ArrayList<Connection> GetPrevConnections() {
 
-        String getStatement = "SELECT * FROM " + dbTableName;
+        String getStatement = "SELECT * FROM " + dbTableConnections;
 
         SQLiteDatabase db = getWritableDatabase();
         Cursor cursor;
@@ -72,5 +79,37 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 
         return this.connections;
+    }
+
+    private boolean checkIfPresetExists(String name) {
+
+        String getStatement = "SELECT COUNT(*) FROM " + dbTablePresets + " WHERE Name = '" + name + "'";
+
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery(getStatement, null);
+
+        if(cursor.getCount() > 0)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean addPreset(String name, Light light) {
+
+        boolean exsits = checkIfPresetExists(name);
+        if(!exsits) {
+
+            String statement = "INSERT INTO " + dbTablePresets + " (Name, Brightness, Hue, Sat) " +
+                    "VALUES('" + name + "', '" + light.getLightState().getBri() + "', '" + light.getLightState().getHue() + "', " +
+                    "'" + light.getLightState().getSat() + "')";
+
+            SQLiteDatabase db = getWritableDatabase();
+            db.execSQL(statement);
+        }
+
+        return exsits;
+
     }
 }

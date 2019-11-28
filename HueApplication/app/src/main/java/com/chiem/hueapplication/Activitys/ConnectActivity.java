@@ -74,11 +74,20 @@ public class ConnectActivity extends AppCompatActivity {
         }
 
         Connection connection = new Connection(txtName.getText().toString(), txtIp.getText().toString(),
-                txtPort.getText().toString(), emulator, "newdeveloper");
-        databaseHandler.AddConnection(connection);
+                    txtPort.getText().toString(), emulator, "newdeveloper");
 
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+        if(!emulator) {
+            Intent intent = new Intent(this, LinkActivity.class);
+            intent.putExtra("CONNECTION", connection);
+            startActivity(intent);
+        }
+        else {
+            databaseHandler.AddConnection(connection);
+
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("CONNECTION", connection);
+            startActivity(intent);
+        }
 
     }
 }

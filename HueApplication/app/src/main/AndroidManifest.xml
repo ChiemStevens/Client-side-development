@@ -11,7 +11,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activitys.SingleLightActivity"></activity>
+        <activity android:name=".Activitys.SetPresetActivity"></activity>
+        <activity android:name=".Activitys.LinkActivity" />
+        <activity android:name=".Activitys.SingleLightActivity" />
         <activity android:name=".Activitys.ConnectedActivity" />
         <activity android:name=".Activitys.ConnectActivity" />
         <activity android:name=".Activitys.MainActivity">

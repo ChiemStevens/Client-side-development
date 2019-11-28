@@ -7,15 +7,18 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.chiem.hueapplication.Helpers.ConnectionReminder;
+import com.chiem.hueapplication.Helpers.JsonArrayRequestWithJsonObject;
 import com.chiem.hueapplication.Models.Connection;
 import com.chiem.hueapplication.Models.Light;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,6 +31,7 @@ public class ApiManager {
     private RequestQueue queue;
 
     private String baseUrl;
+    private boolean hasBaseUrl = false;
 
     public ApiManager(Context context) {
         this.context = context;
@@ -52,157 +56,224 @@ public class ApiManager {
         }
 
         this.baseUrl += "/api/" + connection.getKey();
+
+        hasBaseUrl = true;
+    }
+
+    public void tryLink(Connection connection) {
+
+        String url = "http://" + connection.getIp() + ":" + connection.getPort() + "/api/";
+
+        String json = "{\"devicetype\":\"HueApp#" + connection.getName() + "\"}";
+        JsonObject jsonObjectToParse = JsonParser.parseString(json).getAsJsonObject();
+        JSONObject jsonToUse = new JSONObject();
+        try {
+            jsonToUse = new JSONObject(jsonObjectToParse.toString());
+        }
+        catch (Exception ex) {
+
+        }
+
+        final JsonArrayRequestWithJsonObject request = new JsonArrayRequestWithJsonObject(
+                Request.Method.POST,
+                url,
+                jsonToUse,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        try {
+                            String key = response.getJSONObject(0).getJSONObject("success").getString("username");
+                            observer.addLink(key);
+                        }
+                        catch (Exception ex) {
+                            Log.e("Json-error", ex.getMessage());
+                        }
+
+                    }
+                },
+
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("VOLLEY_TAG", error.toString());
+                    }
+                }
+        );
+
+        queue.add(request);
     }
 
 
     public void getLights() {
 
-        String url = baseUrl + "/lights";
+        if(hasBaseUrl) {
 
-        final JsonObjectRequest request = new JsonObjectRequest(
+            String url = baseUrl + "/lights";
 
-                Request.Method.GET,
-                url,
-                null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
+            final JsonObjectRequest request = new JsonObjectRequest(
 
-                        try {
-                            Iterator<String> keys = response.keys();
+                    Request.Method.GET,
+                    url,
+                    null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
 
-                            while(keys.hasNext()) {
-                                String key = keys.next();
-                                if (response.get(key) instanceof JSONObject) {
+                            try {
+                                Iterator<String> keys = response.keys();
 
-                                    Light light = new Light(key, response.getJSONObject(key));
-                                    observer.addLight(light);
+                                while(keys.hasNext()) {
+                                    String key = keys.next();
+                                    if (response.get(key) instanceof JSONObject) {
+
+                                        Light light = new Light(key, response.getJSONObject(key));
+                                        observer.addLight(light);
+                                    }
                                 }
                             }
-                        }
-                        catch (JSONException ex) {
+                            catch (JSONException ex) {
 
+                            }
+                        }
+                    },
+
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d("VOLLEY_TAG", error.toString());
                         }
                     }
-                },
+            );
 
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d("VOLLEY_TAG", error.toString());
-                    }
-                }
-        );
+            queue.add(request);
 
-        queue.add(request);
+        }
     }
 
     public void changeLight(Light light) {
-        String url = baseUrl + "/lights/" + light.getSendKey() + "/state/";
 
-        Gson gson = new Gson();
-        String json = gson.toJson(light.getLightState());
-        JsonObject jsonObjectToParse = JsonParser.parseString(json).getAsJsonObject();
-        JSONObject jsonToUse = new JSONObject();
-        try {
-            jsonToUse = new JSONObject(jsonObjectToParse.toString());
-        }
-        catch (Exception ex) {
+        if(hasBaseUrl) {
 
-        }
+            String url = baseUrl + "/lights/" + light.getSendKey() + "/state/";
 
-        final JsonObjectRequest request = new JsonObjectRequest(
+            Gson gson = new Gson();
+            String json = gson.toJson(light.getLightState());
+            JsonObject jsonObjectToParse = JsonParser.parseString(json).getAsJsonObject();
+            JSONObject jsonToUse = new JSONObject();
+            try {
+                jsonToUse = new JSONObject(jsonObjectToParse.toString());
+            }
+            catch (Exception ex) {
 
-                Request.Method.PUT,
-                url,
-                jsonToUse,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
+            }
 
+            final JsonObjectRequest request = new JsonObjectRequest(
+
+                    Request.Method.PUT,
+                    url,
+                    jsonToUse,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+
+                        }
+                    },
+
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d("VOLLEY_TAG", error.toString());
+                        }
                     }
-                },
+            );
 
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d("VOLLEY_TAG", error.toString());
-                    }
-                }
-        );
+            queue.add(request);
 
-        queue.add(request);
+        }
+
     }
 
     public void changeLightBri(String lightSendKey ,int briValue) {
-        String url = baseUrl + "/lights/" + lightSendKey + "/state/";
 
-        String json = "{\"bri\":" +  briValue +"}";
-        JsonObject jsonObjectToParse = JsonParser.parseString(json).getAsJsonObject();
-        JSONObject jsonToUse = new JSONObject();
-        try {
-            jsonToUse = new JSONObject(jsonObjectToParse.toString());
-        }
-        catch (Exception ex) {
+        if(hasBaseUrl) {
 
-        }
+            String url = baseUrl + "/lights/" + lightSendKey + "/state/";
 
-        final JsonObjectRequest request = new JsonObjectRequest(
+            String json = "{\"bri\":" +  briValue +"}";
+            JsonObject jsonObjectToParse = JsonParser.parseString(json).getAsJsonObject();
+            JSONObject jsonToUse = new JSONObject();
+            try {
+                jsonToUse = new JSONObject(jsonObjectToParse.toString());
+            }
+            catch (Exception ex) {
 
-                Request.Method.PUT,
-                url,
-                jsonToUse,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
+            }
 
+            final JsonObjectRequest request = new JsonObjectRequest(
+
+                    Request.Method.PUT,
+                    url,
+                    jsonToUse,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+
+                        }
+                    },
+
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d("VOLLEY_TAG", error.toString());
+                        }
                     }
-                },
+            );
 
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d("VOLLEY_TAG", error.toString());
-                    }
-                }
-        );
+            queue.add(request);
 
-        queue.add(request);
+        }
+
     }
 
     public void changeHue(String lightSendKey, float hue, float sateration) {
-        String url = baseUrl + "/lights/" + lightSendKey + "/state/";
 
-        String json = "{\"hue\":" +  hue +", \"sat\":" + sateration + "}";
-        JsonObject jsonObjectToParse = JsonParser.parseString(json).getAsJsonObject();
-        JSONObject jsonToUse = new JSONObject();
-        try {
-            jsonToUse = new JSONObject(jsonObjectToParse.toString());
-        }
-        catch (Exception ex) {
+        if(hasBaseUrl) {
 
-        }
+            String url = baseUrl + "/lights/" + lightSendKey + "/state/";
 
-        final JsonObjectRequest request = new JsonObjectRequest(
+            String json = "{\"hue\":" +  hue +", \"sat\":" + sateration + "}";
+            JsonObject jsonObjectToParse = JsonParser.parseString(json).getAsJsonObject();
+            JSONObject jsonToUse = new JSONObject();
+            try {
+                jsonToUse = new JSONObject(jsonObjectToParse.toString());
+            }
+            catch (Exception ex) {
 
-                Request.Method.PUT,
-                url,
-                jsonToUse,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
+            }
 
+            final JsonObjectRequest request = new JsonObjectRequest(
+
+                    Request.Method.PUT,
+                    url,
+                    jsonToUse,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+
+                        }
+                    },
+
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d("VOLLEY_TAG", error.toString());
+                        }
                     }
-                },
+            );
 
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d("VOLLEY_TAG", error.toString());
-                    }
-                }
-        );
+            queue.add(request);
 
-        queue.add(request);
+        }
+
     }
 }
