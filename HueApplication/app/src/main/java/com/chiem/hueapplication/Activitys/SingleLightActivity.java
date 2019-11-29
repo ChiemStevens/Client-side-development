@@ -118,7 +118,7 @@ public class SingleLightActivity extends AppCompatActivity {
 
         float correctHueValue = hsv[0] * (65535.0f / 360.0f);
 
-        apiManager.changeHue(light.getSendKey(), correctHueValue, 255 * hsv[1]);
+        apiManager.changeHue(light.getSendKey(), (int)correctHueValue, (int)(255 * hsv[1]));
         //imageColor.setColorFilter(Color.rgb(r,g,b);
     }
 
@@ -153,6 +153,14 @@ public class SingleLightActivity extends AppCompatActivity {
     public void OnAddPresetClick(View v) {
 
         Intent intent = new Intent(this, SetPresetActivity.class);
+        intent.putExtra("LIGHT", light);
+        startActivity(intent);
+
+    }
+
+    public void OnLoadPresetClick(View v) {
+
+        Intent intent = new Intent(this, LoadPresetActivity.class);
         intent.putExtra("LIGHT", light);
         startActivity(intent);
 

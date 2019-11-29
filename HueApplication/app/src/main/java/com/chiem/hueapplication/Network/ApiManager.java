@@ -15,6 +15,7 @@ import com.chiem.hueapplication.Helpers.JsonArrayRequestWithJsonObject;
 import com.chiem.hueapplication.Models.Connection;
 import com.chiem.hueapplication.Models.Light;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -209,14 +210,14 @@ public class ApiManager {
 
             }
 
-            final JsonObjectRequest request = new JsonObjectRequest(
+            final JsonArrayRequestWithJsonObject request = new JsonArrayRequestWithJsonObject(
 
                     Request.Method.PUT,
                     url,
                     jsonToUse,
-                    new Response.Listener<JSONObject>() {
+                    new Response.Listener<JSONArray>() {
                         @Override
-                        public void onResponse(JSONObject response) {
+                        public void onResponse(JSONArray response) {
 
                         }
                     },
@@ -235,7 +236,7 @@ public class ApiManager {
 
     }
 
-    public void changeHue(String lightSendKey, float hue, float sateration) {
+    public void changeHue(String lightSendKey, int hue, int sateration) {
 
         if(hasBaseUrl) {
 
@@ -251,14 +252,14 @@ public class ApiManager {
 
             }
 
-            final JsonObjectRequest request = new JsonObjectRequest(
+            final JsonArrayRequestWithJsonObject request = new JsonArrayRequestWithJsonObject(
 
                     Request.Method.PUT,
                     url,
                     jsonToUse,
-                    new Response.Listener<JSONObject>() {
+                    new Response.Listener<JSONArray>() {
                         @Override
-                        public void onResponse(JSONObject response) {
+                        public void onResponse(JSONArray response) {
 
                         }
                     },

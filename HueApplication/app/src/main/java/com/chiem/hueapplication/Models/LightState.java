@@ -21,6 +21,10 @@ public class LightState implements Serializable {
     private boolean reachable;
     private boolean on;
 
+    public LightState() {
+
+    }
+
     public LightState(JSONObject jsonObject) {
         try {
             this.x = jsonObject.getJSONArray("xy").getDouble(0);

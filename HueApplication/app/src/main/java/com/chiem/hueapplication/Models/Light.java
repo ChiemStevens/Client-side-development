@@ -33,6 +33,14 @@ public class Light implements Serializable {
         }
     }
 
+    public Light(String name, int brightness, int hue, int sat) {
+        this.name = name;
+        this.setLightState(new LightState());
+        this.getLightState().setBri(brightness);
+        this.getLightState().setHue(hue);
+        this.getLightState().setSat(sat);
+    }
+
     public String getSendKey() {
         return sendKey;
     }

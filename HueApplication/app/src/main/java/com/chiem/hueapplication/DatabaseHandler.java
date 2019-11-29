@@ -83,7 +83,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     private boolean checkIfPresetExists(String name) {
 
-        String getStatement = "SELECT COUNT(*) FROM " + dbTablePresets + " WHERE Name = '" + name + "'";
+        String getStatement = "SELECT * FROM " + dbTablePresets + " WHERE Name = '" + name + "'";
 
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery(getStatement, null);
@@ -110,6 +110,30 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
 
         return exsits;
+
+    }
+
+    public ArrayList<Light> getPresets() {
+
+        String getStatement = "SELECT * FROM " + dbTablePresets;
+        ArrayList<Light> lights = new ArrayList<>();
+
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor cursor;
+        cursor = db.rawQuery(getStatement, null);
+        if(cursor.getCount() > 0)
+        {
+            while(cursor.moveToNext()) {
+
+                lights.add(new Light(cursor.getString(cursor.getColumnIndex("Name")),
+                        cursor.getInt(cursor.getColumnIndex("Brightness")),
+                        cursor.getInt(cursor.getColumnIndex("Hue")),
+                        cursor.getInt(cursor.getColumnIndex("Sat"))));
+            }
+        }
+
+
+        return lights;
 
     }
 }
