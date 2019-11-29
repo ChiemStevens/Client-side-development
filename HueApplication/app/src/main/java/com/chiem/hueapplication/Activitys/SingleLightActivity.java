@@ -164,6 +164,7 @@ public class SingleLightActivity extends AppCompatActivity {
     public void OnAddPresetClick(View v) {
 
         Intent intent = new Intent(this, SetPresetActivity.class);
+        intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
         intent.putExtra("LIGHT", light);
         startActivity(intent);
 
@@ -172,6 +173,7 @@ public class SingleLightActivity extends AppCompatActivity {
     public void OnLoadPresetClick(View v) {
 
         Intent intent = new Intent(this, LoadPresetActivity.class);
+        intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
         intent.putExtra("LIGHT", light);
         startActivity(intent);
 

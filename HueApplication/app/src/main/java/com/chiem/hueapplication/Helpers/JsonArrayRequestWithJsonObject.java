@@ -28,6 +28,11 @@ public class JsonArrayRequestWithJsonObject extends JsonRequest<JSONArray> {
         try {
             String jsonString = new String(response.data,
                     HttpHeaderParser.parseCharset(response.headers, PROTOCOL_CHARSET));
+
+            if(!jsonString.endsWith("]")) {
+                jsonString += "]";
+            }
+
             return Response.success(new JSONArray(jsonString),
                     HttpHeaderParser.parseCacheHeaders(response));
         } catch (UnsupportedEncodingException e) {

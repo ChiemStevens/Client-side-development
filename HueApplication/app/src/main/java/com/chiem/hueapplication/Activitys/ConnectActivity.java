@@ -78,6 +78,7 @@ public class ConnectActivity extends AppCompatActivity {
 
         if(!emulator) {
             Intent intent = new Intent(this, LinkActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra("CONNECTION", connection);
             startActivity(intent);
         }
@@ -85,6 +86,7 @@ public class ConnectActivity extends AppCompatActivity {
             databaseHandler.AddConnection(connection);
 
             Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra("CONNECTION", connection);
             startActivity(intent);
         }

@@ -12,6 +12,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.chiem.hueapplication.Helpers.ConnectionReminder;
 import com.chiem.hueapplication.Helpers.JsonArrayRequestWithJsonObject;
+import com.chiem.hueapplication.Helpers.JsonObjectRequestWithJsonObject;
 import com.chiem.hueapplication.Models.Connection;
 import com.chiem.hueapplication.Models.Light;
 import com.google.gson.Gson;
@@ -111,7 +112,7 @@ public class ApiManager {
 
             String url = baseUrl + "/lights";
 
-            final JsonObjectRequest request = new JsonObjectRequest(
+            final JsonObjectRequestWithJsonObject request = new JsonObjectRequestWithJsonObject(
 
                     Request.Method.GET,
                     url,
@@ -171,6 +172,8 @@ public class ApiManager {
 
             }
 
+            Log.d("JSON", json);
+
             final JsonArrayRequestWithJsonObject request = new JsonArrayRequestWithJsonObject(
 
                     Request.Method.PUT,
@@ -203,7 +206,7 @@ public class ApiManager {
 
             String url = baseUrl + "/lights/" + lightSendKey + "/state/";
 
-            String json = "{\"bri\":" +  briValue +"}";
+            String json = "{\"bri\": " +  briValue +"}";
             JsonObject jsonObjectToParse = JsonParser.parseString(json).getAsJsonObject();
             JSONObject jsonToUse = new JSONObject();
             try {
@@ -212,6 +215,8 @@ public class ApiManager {
             catch (Exception ex) {
 
             }
+
+            Log.d("JSON", json);
 
             final JsonArrayRequestWithJsonObject request = new JsonArrayRequestWithJsonObject(
 
@@ -245,7 +250,7 @@ public class ApiManager {
 
             String url = baseUrl + "/lights/" + lightSendKey + "/state/";
 
-            String json = "{\"hue\":" +  hue +", \"sat\":" + sateration + "}";
+            String json = "{\"hue\": " +  hue +", \"sat\": " + sateration + "}";
             JsonObject jsonObjectToParse = JsonParser.parseString(json).getAsJsonObject();
             JSONObject jsonToUse = new JSONObject();
             try {
@@ -254,6 +259,8 @@ public class ApiManager {
             catch (Exception ex) {
 
             }
+
+            Log.d("JSON", json);
 
             final JsonArrayRequestWithJsonObject request = new JsonArrayRequestWithJsonObject(
 

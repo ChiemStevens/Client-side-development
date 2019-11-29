@@ -23,7 +23,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String CREATE_TABLE_P = "CREATE TABLE " + dbTablePresets + "(Name text, Brightness Integer, Hue Integer, Sat Integer)";
 
     public DatabaseHandler(Context context) {
-
         super(context, dbName, null, dbVersion);
     }
 

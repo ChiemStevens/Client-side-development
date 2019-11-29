@@ -38,16 +38,12 @@ public class MainActivity extends AppCompatActivity {
             TextView lblNoConnections = findViewById(R.id.lblNoPreviousConnections);
             lblNoConnections.setVisibility(View.INVISIBLE);
         }
-
-        //For emulator
-        //http://<ip>:<port>/api/newdeveloper
-        //Example:
-        //http://192.168.2.143:1234/api/newdeveloper
     }
 
     public void onNewConnectionClick(View v) {
 
         Intent intent = new Intent(this, ConnectActivity.class);
+        intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity(intent);
 
     }
