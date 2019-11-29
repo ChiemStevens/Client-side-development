@@ -39,7 +39,7 @@ public class PresetAdapter extends RecyclerView.Adapter<PresetAdapter.PresetsVie
     public void onBindViewHolder(@NonNull PresetAdapter.PresetsViewHolder holder, int i) {
         final Light light = dataset.get(i);
 
-        holder.name.setText(light.getName());
+        holder.name.setText(light.getType());
     }
 
     @Override
@@ -69,6 +69,7 @@ public class PresetAdapter extends RecyclerView.Adapter<PresetAdapter.PresetsVie
                     // Get GWB object waarop is geclicked
                     Light light = dataset.get(PresetAdapter.PresetsViewHolder.super.getAdapterPosition());
                     intent.putExtra("LIGHT", light);
+                    intent.putExtra("IS-PRESET", true);
 
                     // Start de nieuwe activity
                     view.getContext().startActivity(intent);

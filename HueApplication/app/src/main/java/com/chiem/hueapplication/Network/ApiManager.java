@@ -157,8 +157,11 @@ public class ApiManager {
 
             String url = baseUrl + "/lights/" + light.getSendKey() + "/state/";
 
-            Gson gson = new Gson();
-            String json = gson.toJson(light.getLightState());
+            String json = "{\"hue\": " + light.getLightState().getHue() + ", " +
+                    "\"sat\": " + light.getLightState().getSat() + ", " +
+                    "\"bri\": " + light.getLightState().getBri() + ", " +
+                    "\"on\": " + light.getLightState().isOn() + "}";
+
             JsonObject jsonObjectToParse = JsonParser.parseString(json).getAsJsonObject();
             JSONObject jsonToUse = new JSONObject();
             try {
@@ -168,14 +171,14 @@ public class ApiManager {
 
             }
 
-            final JsonObjectRequest request = new JsonObjectRequest(
+            final JsonArrayRequestWithJsonObject request = new JsonArrayRequestWithJsonObject(
 
                     Request.Method.PUT,
                     url,
                     jsonToUse,
-                    new Response.Listener<JSONObject>() {
+                    new Response.Listener<JSONArray>() {
                         @Override
-                        public void onResponse(JSONObject response) {
+                        public void onResponse(JSONArray response) {
 
                         }
                     },

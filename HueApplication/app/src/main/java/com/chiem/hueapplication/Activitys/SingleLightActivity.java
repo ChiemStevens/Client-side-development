@@ -42,6 +42,15 @@ public class SingleLightActivity extends AppCompatActivity {
 
         this.light = (Light)getIntent().getSerializableExtra("LIGHT");
 
+        try {
+            boolean isPreset = (boolean)getIntent().getSerializableExtra("IS-PRESET");
+            apiManager.changeLight(light);
+        }
+        catch (Exception ex) {
+            Log.d("PARSE_EX", ex.getMessage());
+        }
+
+
         TextView lblLightName = findViewById(R.id.lblLightName);
         Switch lightSwitch = findViewById(R.id.switchOnOff)  ;
         SeekBar brightNessBar = findViewById(R.id.brightnessBar);
@@ -118,6 +127,8 @@ public class SingleLightActivity extends AppCompatActivity {
 
         float correctHueValue = hsv[0] * (65535.0f / 360.0f);
 
+        light.getLightState().setHue((int)correctHueValue);
+        light.getLightState().setSat(255 * (int)hsv[1]);
         apiManager.changeHue(light.getSendKey(), (int)correctHueValue, (int)(255 * hsv[1]));
         //imageColor.setColorFilter(Color.rgb(r,g,b);
     }

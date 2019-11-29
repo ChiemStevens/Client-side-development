@@ -9,14 +9,14 @@ import java.io.Serializable;
 
 public class LightState implements Serializable {
 
-    private double x;
-    private double y;
-    private double ct;
+    private int x;
+    private int y;
+    private int ct;
     private String alert;
-    private double sat;
+    private int sat;
     private String effect;
-    private double bri;
-    private double hue;
+    private int bri;
+    private int hue;
     private String colormode;
     private boolean reachable;
     private boolean on;
@@ -27,14 +27,14 @@ public class LightState implements Serializable {
 
     public LightState(JSONObject jsonObject) {
         try {
-            this.x = jsonObject.getJSONArray("xy").getDouble(0);
-            this.x = jsonObject.getJSONArray("xy").getDouble(1);
-            this.ct = jsonObject.getDouble("ct");
+            this.x = jsonObject.getJSONArray("xy").getInt(0);
+            this.x = jsonObject.getJSONArray("xy").getInt(1);
+            this.ct = jsonObject.getInt("ct");
             this.alert = jsonObject.getString("alert");
-            this.sat = jsonObject.getDouble("sat");
+            this.sat = jsonObject.getInt("sat");
             this.effect = jsonObject.getString("effect");
-            this.bri = jsonObject.getDouble("bri");
-            this.hue = jsonObject.getDouble("hue");
+            this.bri = jsonObject.getInt("bri");
+            this.hue = jsonObject.getInt("hue");
             this.colormode = jsonObject.getString("colormode");
             this.reachable = jsonObject.getBoolean("reachable");
             this.on = jsonObject.getBoolean("on");
@@ -44,27 +44,27 @@ public class LightState implements Serializable {
         }
     }
 
-    public double getX() {
+    public int getX() {
         return x;
     }
 
-    public void setX(double x) {
+    public void setX(int x) {
         this.x = x;
     }
 
-    public double getY() {
+    public int getY() {
         return y;
     }
 
-    public void setY(double y) {
+    public void setY(int y) {
         this.y = y;
     }
 
-    public double getCt() {
+    public int getCt() {
         return ct;
     }
 
-    public void setCt(double ct) {
+    public void setCt(int ct) {
         this.ct = ct;
     }
 
@@ -76,11 +76,11 @@ public class LightState implements Serializable {
         this.alert = alert;
     }
 
-    public double getSat() {
+    public int getSat() {
         return sat;
     }
 
-    public void setSat(double sat) {
+    public void setSat(int sat) {
         this.sat = sat;
     }
 
@@ -92,19 +92,19 @@ public class LightState implements Serializable {
         this.effect = effect;
     }
 
-    public double getBri() {
+    public int getBri() {
         return bri;
     }
 
-    public void setBri(double bri) {
+    public void setBri(int bri) {
         this.bri = bri;
     }
 
-    public double getHue() {
+    public int getHue() {
         return hue;
     }
 
-    public void setHue(double hue) {
+    public void setHue(int hue) {
         this.hue = hue;
     }
 
