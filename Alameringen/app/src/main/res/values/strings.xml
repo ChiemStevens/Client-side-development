@@ -7,4 +7,10 @@
     <string name="menu_place">Plaats</string>
     <string name="menu_map">Kaart</string>
     <string name="menu_alert">Meldingen</string>
+    <string name="loading_explanation">Data ophalen</string>
+
+    <string name="no_places">Nog geen plaatsen toegevoegd.</string>
+
+    <string name="search">Zoek</string>
+    <string name="remove">Verwijder</string>
 </resources>

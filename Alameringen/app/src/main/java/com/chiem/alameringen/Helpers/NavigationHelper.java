@@ -1,8 +1,13 @@
-package com.chiem.alameringen;
+package com.chiem.alameringen.Helpers;
 
 import android.content.Context;
 import android.content.Intent;
 import android.view.MenuItem;
+
+import com.chiem.alameringen.Activitys.EmergencyActivity;
+import com.chiem.alameringen.Activitys.MainActivity;
+import com.chiem.alameringen.Activitys.PlaceActivity;
+import com.chiem.alameringen.R;
 
 public class NavigationHelper {
 
