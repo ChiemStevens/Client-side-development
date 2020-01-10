@@ -12,21 +12,42 @@ import com.chiem.alameringen.R;
 
 public class NavigationHelper {
 
-    public static Fragment NavigateMenuItemClick(Context context, MenuItem item) {
+    private static NavigationHelper instance;
+
+    private MapFragment mapFragment;
+    private PlaceFragment placeFragment;
+    private EmergencysFragment emergencysFragment;
+
+    private NavigationHelper() {
+        mapFragment = new MapFragment();
+        placeFragment = new PlaceFragment();
+        emergencysFragment = new EmergencysFragment();
+    }
+
+    public Fragment NavigateMenuItemClick(MenuItem item) {
 
         Fragment fragment = null;
 
         switch (item.getItemId()) {
             case R.id.action_map:
-                fragment = new MapFragment();
+                fragment = mapFragment;
                 break;
             case R.id.action_place:
-                fragment = new PlaceFragment();
+                fragment = placeFragment;
                 break;
             case R.id.action_emergency:
-                fragment = new EmergencysFragment();
+                fragment = emergencysFragment;
                 break;
         }
         return fragment;
+    }
+
+    public static NavigationHelper getInstance() {
+
+        if(instance == null) {
+            instance = new NavigationHelper();
+        }
+        return instance;
+
     }
 }

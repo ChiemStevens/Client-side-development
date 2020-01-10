@@ -26,11 +26,12 @@ public class MainActivity extends AppCompatActivity {
     private void NavigationBinder() {
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-                Fragment fragment = NavigationHelper.NavigateMenuItemClick(getApplicationContext(), item);
+                
+                Fragment fragment = NavigationHelper.getInstance().NavigateMenuItemClick(item);
 
                 openFragment(fragment);
 
