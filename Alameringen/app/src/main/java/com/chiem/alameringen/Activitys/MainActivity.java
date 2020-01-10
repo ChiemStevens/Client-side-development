@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                
+
                 Fragment fragment = NavigationHelper.getInstance().NavigateMenuItemClick(item);
 
                 openFragment(fragment);

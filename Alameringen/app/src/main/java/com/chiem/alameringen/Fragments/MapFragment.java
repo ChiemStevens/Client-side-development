@@ -111,7 +111,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         boolean hasPermission = checkLocationPermission(getActivity());
         if(hasPermission) {
             LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,17));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,17));
         }
     }
 
