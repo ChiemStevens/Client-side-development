@@ -1,31 +1,32 @@
 package com.chiem.alameringen.Helpers;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.MenuItem;
 
-import com.chiem.alameringen.Activitys.EmergencyActivity;
-import com.chiem.alameringen.Activitys.MainActivity;
-import com.chiem.alameringen.Activitys.PlaceActivity;
+import androidx.fragment.app.Fragment;
+
+import com.chiem.alameringen.Fragments.EmergencysFragment;
+import com.chiem.alameringen.Fragments.MapFragment;
+import com.chiem.alameringen.Fragments.PlaceFragment;
 import com.chiem.alameringen.R;
 
 public class NavigationHelper {
 
-    public static Intent NavigateMenuItemClick(Context context, MenuItem item) {
+    public static Fragment NavigateMenuItemClick(Context context, MenuItem item) {
 
-        Intent intent = null;
+        Fragment fragment = null;
 
         switch (item.getItemId()) {
             case R.id.action_map:
-                intent = new Intent(context, MainActivity.class);
+                fragment = new MapFragment();
                 break;
             case R.id.action_place:
-                intent = new Intent(context, PlaceActivity.class);
+                fragment = new PlaceFragment();
                 break;
             case R.id.action_emergency:
-                intent = new Intent(context, EmergencyActivity.class);
+                fragment = new EmergencysFragment();
                 break;
         }
-        return intent;
+        return fragment;
     }
 }

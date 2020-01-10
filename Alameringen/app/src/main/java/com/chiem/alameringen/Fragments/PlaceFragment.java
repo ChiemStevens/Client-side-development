@@ -1,28 +1,25 @@
-package com.chiem.alameringen.Activitys;
+package com.chiem.alameringen.Fragments;
+
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.TextView;
-
-import androidx.appcompat.widget.AppCompatTextView;
-
-import com.chiem.alameringen.Adapters.EmergencyAdapter;
 import com.chiem.alameringen.Adapters.PlaceAdapter;
 import com.chiem.alameringen.Helpers.DatabaseManager;
-import com.chiem.alameringen.Helpers.NavigationHelper;
 import com.chiem.alameringen.Helpers.PreferenceHelper;
 import com.chiem.alameringen.Models.Place;
 import com.chiem.alameringen.R;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,7 +27,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-public class PlaceActivity extends AppCompatActivity {
+public class PlaceFragment extends Fragment {
 
     private DatabaseManager databaseManager;
     private RecyclerView recyclerView;
@@ -41,29 +38,36 @@ public class PlaceActivity extends AppCompatActivity {
     private Place currentPlace;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_place);
 
-        databaseManager = new DatabaseManager(this);
+        databaseManager = new DatabaseManager(getContext());
 
-        NavigationBinder();
+    }
 
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.place_fragment, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         ArrayList<String> places = readLines();
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.select_dialog_item, places);
-        autoCompleteTextView = findViewById(R.id.txtPlace);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.select_dialog_item, places);
+        autoCompleteTextView = view.findViewById(R.id.txtPlace);
         autoCompleteTextView.setThreshold(1);
         autoCompleteTextView.setAdapter(adapter);
 
-
-        String placeName = PreferenceHelper.getDefaults("CURRENT-PLACE", this);
+        String placeName = PreferenceHelper.getDefaults("CURRENT-PLACE", getContext());
         currentPlace = new Place(placeName, null);
 
         savedPlaces = databaseManager.getPlaces();
         savedPlaces.add(0, currentPlace);
 
-        lblNoPlaces = findViewById(R.id.txtNoPlaces);
+        lblNoPlaces = view.findViewById(R.id.txtNoPlaces);
         if(savedPlaces.size() > 0) {
             lblNoPlaces.setVisibility(View.INVISIBLE);
         }
@@ -71,10 +75,18 @@ public class PlaceActivity extends AppCompatActivity {
             lblNoPlaces.setVisibility(View.INVISIBLE);
         }
 
-        recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         this.adapter = new PlaceAdapter(savedPlaces);
         recyclerView.setAdapter(this.adapter);
+
+        Button btn = view.findViewById(R.id.btnSearch);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBtnSearchClick(v);
+            }
+        });
     }
 
     public void onBtnSearchClick(View view) {
@@ -92,21 +104,6 @@ public class PlaceActivity extends AppCompatActivity {
         this.adapter.notifyDataSetChanged();
 
         autoCompleteTextView.setText("");
-
-    }
-
-    private void NavigationBinder() {
-
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-                Intent intent = NavigationHelper.NavigateMenuItemClick(getApplicationContext(), item);
-                startActivity(intent);
-                return true;
-            }
-        });
 
     }
 
@@ -131,4 +128,5 @@ public class PlaceActivity extends AppCompatActivity {
 
         return places;
     }
+
 }

@@ -1,6 +1,7 @@
 package com.chiem.alameringen.Adapters;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,13 +9,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.chiem.alameringen.Activitys.EmergencyDetailActivity;
+import com.chiem.alameringen.Activitys.MainActivity;
+import com.chiem.alameringen.Fragments.EmergencyDetailFragment;
 import com.chiem.alameringen.Models.Emergency;
 import com.chiem.alameringen.R;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -84,14 +86,16 @@ public class EmergencyAdapter extends RecyclerView.Adapter<EmergencyAdapter.Conn
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(view.getContext(), EmergencyDetailActivity.class);
 
-                    // Get GWB object waarop is geclicked
                     Emergency emergency = dataset.get(ConnectionsViewHolder.super.getAdapterPosition());
-                    intent.putExtra("EMERGENCY", emergency);
 
-                    // Start de nieuwe activity
-                    view.getContext().startActivity(intent);
+                    MainActivity activity = (MainActivity) view.getContext();
+
+                    EmergencyDetailFragment emergencyDetailFragment = new EmergencyDetailFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("EMERGENCY", emergency);
+                    emergencyDetailFragment.setArguments(bundle);
+                    activity.openFragment(emergencyDetailFragment);
                 }
             });
         }

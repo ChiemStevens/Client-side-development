@@ -17,15 +17,6 @@
         <activity
             android:name=".Activitys.MainActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity
-            android:name=".Activitys.EmergencyDetailActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity
-            android:name=".Activitys.EmergencyActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".Activitys.PlaceActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
