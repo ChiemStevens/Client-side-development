@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.chiem.alameringen.Adapters.EmergencyAdapter;
+import com.chiem.alameringen.Helpers.LandscapeHelper;
 import com.chiem.alameringen.Helpers.PreferenceHelper;
 import com.chiem.alameringen.Models.Emergency;
 import com.chiem.alameringen.R;
@@ -51,5 +52,12 @@ public class EmergencysFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new EmergencyAdapter(emergencies);
         recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        LandscapeHelper.getInstance().setTypeOfFragment("Emergencys");
     }
 }

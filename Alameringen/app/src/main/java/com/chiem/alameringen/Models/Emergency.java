@@ -7,9 +7,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
-public class Emergency implements Serializable {
+public class Emergency implements Serializable, Comparable<Emergency> {
 
     private String id;
     private String date;
@@ -27,9 +34,12 @@ public class Emergency implements Serializable {
     private String fireInfo;
     private int hassubs;
 
+    private Date dateTime;
+
     public Emergency(JSONObject jsonObject) {
 
         capCodes = new ArrayList<>();
+        dateTime = null;
 
         try {
 
@@ -59,9 +69,80 @@ public class Emergency implements Serializable {
 
             this.fireInfo = jsonObject.getString("brandinfo");
 
+
+            if(this.date.toLowerCase().contains("vandaag")) {
+
+                int hours = 0;
+                int min = 0;
+
+                try {
+                    hours = Integer.parseInt(this.date.toLowerCase().substring(8, 10));
+                    min = Integer.parseInt(this.date.toLowerCase().substring(11, 13));
+
+
+                }
+                catch (Exception ex) {
+                    Log.e("Alameringen", ex.getMessage());
+                }
+
+                final Calendar cal = Calendar.getInstance();
+                cal.set(Calendar.HOUR_OF_DAY, hours);// for 6 hour
+                cal.set(Calendar.MINUTE, min);// for 0 min
+
+                dateTime = cal.getTime();
+            }
+            else if(this.date.toLowerCase().contains("gisteren")) {
+
+                int hours = 0;
+                int min = 0;
+
+                try {
+                    hours = Integer.parseInt(this.date.toLowerCase().substring(9, 11));
+                    min = Integer.parseInt(this.date.toLowerCase().substring(12, 14));
+
+
+                }
+                catch (Exception ex) {
+                    Log.e("Alameringen", ex.getMessage());
+                }
+
+                final Calendar cal = Calendar.getInstance();
+                cal.add(Calendar.DATE, -1);
+                cal.set(Calendar.HOUR_OF_DAY, hours);// for 6 hour
+                cal.set(Calendar.MINUTE, min);// for 0 min
+
+                dateTime = cal.getTime();
+            }
+            else {
+
+                int hours = 0;
+                int min = 0;
+
+                try {
+                    hours = Integer.parseInt(this.date.toLowerCase().substring(11, 13));
+                    min = Integer.parseInt(this.date.toLowerCase().substring(14, 16));
+                }
+                catch (Exception ex) {
+                    Log.e("Alameringen", ex.getMessage());
+                }
+
+                String splitDateTime = date.substring(0, 10);
+                Date date1 = new SimpleDateFormat("dd-MM-yyyy").parse(splitDateTime);
+
+                final Calendar cal = Calendar.getInstance();
+                cal.setTime(date1);
+                cal.set(Calendar.HOUR_OF_DAY, hours);// for 6 hour
+                cal.set(Calendar.MINUTE, min);// for 0 min
+
+                dateTime = cal.getTime();
+            }
+
         }
         catch (JSONException ex) {
             Log.e("Alarmeringen", ex.getMessage());
+        }
+        catch (ParseException ex) {
+            Log.e("Alameringen", ex.toString());
         }
 
     }
@@ -184,5 +265,20 @@ public class Emergency implements Serializable {
 
     public void setHassubs(int hassubs) {
         this.hassubs = hassubs;
+    }
+
+
+
+    public Date getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(Date datetime) {
+        this.dateTime = datetime;
+    }
+
+    @Override
+    public int compareTo(Emergency o) {
+        return getDateTime().compareTo(o.getDateTime());
     }
 }

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Alameringen</string>
+    <string name="loading_explanation">Data ophalen</string>
+    <string name="menu_alert">Meldingen</string>
+    <string name="menu_map">Kaart</string>
+    <string name="menu_place">Plaats</string>
+    <string name="navigation_drawer_close">-10</string>
+    <string name="navigation_drawer_open">100</string>
+    <string name="no_places">Nog geen plaatsen toegevoegd</string>
+    <string name="remove">Verwijder</string>
+    <string name="search">Voeg toe</string>
+    <string name="title_activity_main2">Map</string>
+</resources>

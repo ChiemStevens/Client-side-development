@@ -1,6 +1,5 @@
 package com.chiem.alameringen.Adapters;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,8 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.chiem.alameringen.Activitys.MainActivity;
@@ -41,7 +38,6 @@ public class EmergencyAdapter extends RecyclerView.Adapter<EmergencyAdapter.Conn
     @Override
     public void onBindViewHolder(@NonNull ConnectionsViewHolder holder, int i) {
         final Emergency emergency = dataset.get(i);
-        holder.id.setText(emergency.getId());
         holder.place.setText(emergency.getPlace());
         holder.time.setText(emergency.getDate());
 
@@ -50,10 +46,10 @@ public class EmergencyAdapter extends RecyclerView.Adapter<EmergencyAdapter.Conn
                 holder.imageView.setBackgroundResource(R.drawable.ic_emergency_icon);
                 break;
             case "brandweer":
+                holder.imageView.setBackgroundResource(R.drawable.ic_fire_truck);
                 break;
             case "politie":
-                break;
-            case "lifeliner":
+                holder.imageView.setBackgroundResource(R.drawable.ic_police_car);
                 break;
         }
     }
@@ -66,7 +62,6 @@ public class EmergencyAdapter extends RecyclerView.Adapter<EmergencyAdapter.Conn
 
     public class ConnectionsViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView id;
         public TextView place;
         public TextView time;
         public ImageView imageView;
@@ -78,7 +73,6 @@ public class EmergencyAdapter extends RecyclerView.Adapter<EmergencyAdapter.Conn
             super(itemView);
             this.layout = itemView;
 
-            this.id = itemView.findViewById(R.id.txtId);
             this.place = itemView.findViewById(R.id.txtRegion);
             this.time = itemView.findViewById(R.id.txtTime);
             this.imageView = itemView.findViewById(R.id.imgEmergencyIcon);

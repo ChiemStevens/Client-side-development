@@ -17,6 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.chiem.alameringen.Adapters.PlaceAdapter;
 import com.chiem.alameringen.Helpers.DatabaseManager;
+import com.chiem.alameringen.Helpers.EmergencyLoader;
+import com.chiem.alameringen.Helpers.LandscapeHelper;
 import com.chiem.alameringen.Helpers.PreferenceHelper;
 import com.chiem.alameringen.Models.Place;
 import com.chiem.alameringen.R;
@@ -96,15 +98,19 @@ public class PlaceFragment extends Fragment {
         if(text.isEmpty()) {
             return;
         }
-
-        databaseManager.insertPlace(new Place(text, null));
-
-        savedPlaces =  databaseManager.getPlaces();
-        savedPlaces.add(0, currentPlace);
-        this.adapter.notifyDataSetChanged();
-
         autoCompleteTextView.setText("");
 
+
+        databaseManager.insertPlace(new Place(text, null));
+        savedPlaces = databaseManager.getPlaces();
+        savedPlaces.add(0, currentPlace);
+
+        this.adapter = new PlaceAdapter(savedPlaces);
+        recyclerView.setAdapter(this.adapter);
+        this.adapter.notifyDataSetChanged();
+
+        EmergencyLoader emergencyLoader = new EmergencyLoader(getContext());
+        emergencyLoader.loadEmergencies();
     }
 
 
@@ -129,4 +135,10 @@ public class PlaceFragment extends Fragment {
         return places;
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        LandscapeHelper.getInstance().setTypeOfFragment("Place");
+    }
 }

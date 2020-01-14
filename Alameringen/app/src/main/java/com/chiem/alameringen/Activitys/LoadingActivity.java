@@ -29,6 +29,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class LoadingActivity extends AppCompatActivity implements EmergencyApiListener {
@@ -76,6 +77,8 @@ public class LoadingActivity extends AppCompatActivity implements EmergencyApiLi
         currentEmergenciesRecievedCounter++;
 
         if(currentEmergenciesRecievedCounter == allEmergenciesCounter) {
+
+            Collections.sort(emergencies, Collections.reverseOrder());
 
             String connectionsJSONString = new Gson().toJson(emergencies);
             PreferenceHelper.setDefaults("EMERGENCIES", connectionsJSONString, this);

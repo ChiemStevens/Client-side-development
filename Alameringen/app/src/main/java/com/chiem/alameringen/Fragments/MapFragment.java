@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.chiem.alameringen.Activitys.MainActivity;
+import com.chiem.alameringen.Helpers.LandscapeHelper;
 import com.chiem.alameringen.Helpers.PreferenceHelper;
 import com.chiem.alameringen.Models.Emergency;
 import com.chiem.alameringen.R;
@@ -30,6 +31,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -41,7 +43,10 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnPolylineClickListener,
         LocationSource, LocationListener, GoogleMap.OnMyLocationButtonClickListener, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
@@ -105,6 +110,24 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                     .position(latLng)
                     .title(emergencies.get(i).getText()));
             marker.setTag(emergencies.get(i));
+
+
+            Date now = Calendar.getInstance().getTime();
+            long diffInMillies = now.getTime() - emergencies.get(i).getDateTime().getTime();
+            long diffSeconds = diffInMillies / 1000 % 60;
+            long diffMinutes = diffInMillies / (60 * 1000) % 60;
+            long diffHours = diffInMillies / (60 * 60 * 1000) % 24;
+            long diffDays = diffInMillies / (24 * 60 * 60 * 1000);
+
+            if(diffHours < 3 && diffDays <= 0) {
+                marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+            }
+            else if(diffHours < 10 && diffDays <= 0) {
+                marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+            }
+            else {
+                marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+            }
 
         }
 
@@ -208,5 +231,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        LandscapeHelper.getInstance().setTypeOfFragment("Map");
     }
 }

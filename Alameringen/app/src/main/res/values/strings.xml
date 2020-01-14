@@ -1,16 +1,16 @@
 <resources>
-    <string name="app_name">Alameringen</string>
+    <string name="app_name">Emergencys</string>
     <string name="navigation_drawer_open">100</string>
     <string name="navigation_drawer_close">-10</string>
-    <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_activity_main2">Map</string>
 
-    <string name="menu_place">Plaats</string>
-    <string name="menu_map">Kaart</string>
-    <string name="menu_alert">Meldingen</string>
-    <string name="loading_explanation">Data ophalen</string>
+    <string name="menu_place">Places</string>
+    <string name="menu_map">Map</string>
+    <string name="menu_alert">Alerts</string>
+    <string name="loading_explanation">Retrieving data</string>
 
-    <string name="no_places">Nog geen plaatsen toegevoegd.</string>
+    <string name="no_places">No places added yet.</string>
 
-    <string name="search">Zoek</string>
-    <string name="remove">Verwijder</string>
+    <string name="search">Add</string>
+    <string name="remove">Delete</string>
 </resources>

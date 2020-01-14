@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.chiem.alameringen.Helpers.DatabaseManager;
+import com.chiem.alameringen.Helpers.EmergencyLoader;
 import com.chiem.alameringen.Models.Place;
 import com.chiem.alameringen.R;
 
@@ -79,6 +80,9 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHol
 
                         notifyItemChanged(getAdapterPosition());
                         notifyItemRangeChanged(getAdapterPosition(), dataset.size());
+
+                        EmergencyLoader emergencyLoader = new EmergencyLoader(view.getContext());
+                        emergencyLoader.loadEmergencies();
                     } catch (Exception e) {
                         Log.e("Error", e.getMessage());
                     }

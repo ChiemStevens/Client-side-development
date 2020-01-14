@@ -18,6 +18,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.chiem.alameringen.Helpers.LandscapeHelper;
 import com.chiem.alameringen.Helpers.OnRouteCallback;
 import com.chiem.alameringen.Helpers.RouteManager;
 import com.chiem.alameringen.Models.Emergency;
@@ -54,9 +55,6 @@ public class EmergencyDetailFragment extends Fragment implements OnMapReadyCallb
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
-        fetchLocation();
-
         routeLines = new ArrayList<>();
         routeManager = new RouteManager(this, getContext());
 
@@ -74,15 +72,38 @@ public class EmergencyDetailFragment extends Fragment implements OnMapReadyCallb
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+        fetchLocation();
+
         ImageView imageView = view.findViewById(R.id.imgIcon);
         TextView txtTitle = view.findViewById(R.id.txtTitle);
         TextView txtPlace = view.findViewById(R.id.txtPlace);
         TextView txtDate = view.findViewById(R.id.txtDate);
 
-        imageView.setBackgroundResource(R.drawable.ic_emergency_icon);
+
+        switch (emergency.getIcon().toLowerCase()) {
+            case "ambulance":
+                imageView.setBackgroundResource(R.drawable.ic_emergency_icon);
+                break;
+            case "brandweer":
+                imageView.setBackgroundResource(R.drawable.ic_fire_truck);
+                break;
+            case "politie":
+                imageView.setBackgroundResource(R.drawable.ic_police_car);
+                break;
+        }
+
+
         txtTitle.setText(emergency.getText());
         txtPlace.setText(emergency.getPlace());
         txtDate.setText(emergency.getDate());
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        LandscapeHelper.getInstance().setCurrentEmergency(emergency);
+        LandscapeHelper.getInstance().setTypeOfFragment("EmergencyDetail");
+        super.onSaveInstanceState(outState);
     }
 
     private void fetchLocation() {
@@ -100,6 +121,9 @@ public class EmergencyDetailFragment extends Fragment implements OnMapReadyCallb
                     LatLng myLocation = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
                     LatLng emergencyLocation = new LatLng(Double.parseDouble(emergency.getLat()), Double.parseDouble(emergency.getLon()));
                     routeManager.fetchRoute(myLocation, emergencyLocation);
+
+                    if (!isAdded()) return;
+
 
                     SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                             .findFragmentById(R.id.map);
@@ -200,6 +224,8 @@ public class EmergencyDetailFragment extends Fragment implements OnMapReadyCallb
 
     @Override
     public void OnRouteLoaded(PolylineOptions options, LatLngBounds bounds, int padding) {
-        routeLines.add(googleMap.addPolyline(options));
+        if(googleMap != null) {
+            routeLines.add(googleMap.addPolyline(options));
+        }
     }
 }
